@@ -5,6 +5,7 @@ const childProcess = require('child_process');
 
 var params = new URLSearchParams(window.location.search);
 var systemId = params.get('systemId');
+var file = params.get('file');
 var commands = loadCommands();
 var focusedCommandIndex = 0;
 var lastButtonIndex;
@@ -44,7 +45,7 @@ function addCommand(command) {
 function createOnclick(command) {
     return (function(currentCommand) {
         return function() {
-            runCommand(currentCommand + ' \"' + os.homedir() + '\\emuhub2\\games\\' + systemId + '\\' + params.get('file') + '\"');
+            runCommand(currentCommand + ' \"' + os.homedir() + '\\emuhub2\\games\\' + systemId + '\\' + file + '\"');
         }
     })(command);
 }
@@ -91,9 +92,9 @@ function pollGamepad() {
             } else if (i === 1) {
                 window.history.back();
             } else if (i === 14 || i === 12) {
-                focusedSystemIndex--;
+                focusedCommandIndex--;
             } else if (i === 15 || i === 13) {
-                focusedSystemIndex++;
+                focusedCommandIndex++;
             }
         }
     }
