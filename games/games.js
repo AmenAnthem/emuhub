@@ -66,8 +66,10 @@ function pollGamepad() {
                 document.getElementById(games[focusedGameIndex].name).click();
             } else if (i === 1) {
                 window.history.back();
-            } else if (i === 15) {
-                focusedGameIndex++;
+            } else if (i === 14 || i === 12) {
+                focusedSystemIndex--;
+            } else if (i === 15 || i === 13) {
+                focusedSystemIndex++;
             }
         }
     }

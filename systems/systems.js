@@ -56,7 +56,9 @@ function pollGamepad() {
                 document.getElementById(systems[focusedSystemIndex].id).click();
             } else if (i === 1) {
                 remote.getCurrentWindow().close();
-            } else if (i === 15) {
+            } else if (i === 14 || i === 12) {
+                focusedSystemIndex--;
+            } else if (i === 15 || i === 13) {
                 focusedSystemIndex++;
             }
         }

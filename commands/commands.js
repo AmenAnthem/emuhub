@@ -90,8 +90,10 @@ function pollGamepad() {
                 document.getElementById(commands[focusedCommandIndex].name).click();
             } else if (i === 1) {
                 window.history.back();
-            } else if (i === 15) {
-                focusedCommandIndex++;
+            } else if (i === 14 || i === 12) {
+                focusedSystemIndex--;
+            } else if (i === 15 || i === 13) {
+                focusedSystemIndex++;
             }
         }
     }
