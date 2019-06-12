@@ -2,11 +2,15 @@ const remote = require('electron').remote;
 const os = require('os');
 const loadJsonFile = require('load-json-file');
 
-var systems = loadJsonFile.sync(os.homedir() + '\\emuhub2\\systems.json').systems;
+var systems = loadSystems();
 var focusedSystemIndex = 0;
 
 addViewControls();
 addSystems();
+
+function loadSystems() {
+    return loadJsonFile.sync(os.homedir() + '\\emuhub2\\systems\\systems.json').systems;
+}
 
 function addSystems() {
     for (var i = 0; i < systems.length; i++) {
@@ -16,13 +20,7 @@ function addSystems() {
 
 function addSystem(system) {
     var newParams = new URLSearchParams();
-    newParams.append('id', system.id);
-    newParams.append('romFolderPath', system.romFolderPath);
-    var commands = system.commands;
-    for (var i = 0; i < commands.length; i++) {
-        newParams.append('commandName', commands[i].name);
-        newParams.append('command', commands[i].command);
-    }
+    newParams.append('systemId', system.id);
     var link = document.createElement('a');
     link.id = system.id;
     link.href = '../games/games.html?' + newParams.toString();

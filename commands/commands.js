@@ -3,27 +3,38 @@ const loadJsonFile = require('load-json-file');
 const childProcess = require('child_process');
 
 var params = new URLSearchParams(window.location.search);
-var commands = params.getAll('command');
-var commandNames = params.getAll('commandName');
+var systemId = params.get('systemId');
+var commands = loadCommands();
 var focusedCommandIndex = 0;
 
 addViewControls();
 addHeader();
 addCommands();
 
+function loadCommands() {
+    var systems = loadJsonFile.sync(os.homedir() + '\\emuhub2\\systems\\systems.json').systems;
+    for (var i = 0; i < systems.length; i++) {
+        var system = systems[i];
+        if (system.id === systemId) {
+            return system.commands;
+        }
+    }
+    return [];
+}
+
 function addCommands() {
     for (var i = 0; i < commands.length; i++) {
-        addCommand(commands[i], commandNames[i]);
+        addCommand(commands[i]);
     }
 }
 
-function addCommand(command, commandName) {
+function addCommand(command) {
     var link = document.createElement('a');
-    link.id = commandName;
+    link.id = command.name;
     link.href = '#';
-    link.onclick = createOnclick(command);
+    link.onclick = createOnclick(command.command);
     var image = document.createElement('img');
-    image.src = os.homedir() + '\\emuhub2\\images\\commands\\' + commandName + 'selection.png';
+    image.src = os.homedir() + '\\emuhub2\\images\\commands\\' + command.name + 'selection.png';
     link.appendChild(image);
     document.body.appendChild(link);
 }
@@ -31,7 +42,7 @@ function addCommand(command, commandName) {
 function createOnclick(command) {
     return (function(currentCommand) {
         return function() {
-            runCommand(currentCommand + ' \"' + params.get('romFolderPath') + '\\' + params.get('romName') + '\"');
+            runCommand(currentCommand + ' \"' + os.homedir() + '\\emuhub2\\games\\' + systemId + '\\' + params.get('file') + '\"');
         }
     })(command);
 }
@@ -46,7 +57,7 @@ function runCommand(command) {
 
 function addHeader() {
     var image = document.createElement('img');
-    image.src = os.homedir() + '\\emuhub2\\images\\systems\\' + params.get('id') + 'header.png';
+    image.src = os.homedir() + '\\emuhub2\\images\\systems\\' + systemId + 'header.png';
     document.body.appendChild(image);
 }
 
@@ -72,7 +83,7 @@ function pollGamepad() {
         var button = buttons[i];
         if (button.pressed || button.value > 0) {
             if (i === 0) {
-                document.getElementById(commandNames[focusedCommandIndex]).click();
+                document.getElementById(commands[focusedCommandIndex].name).click();
             } else if (i === 1) {
                 window.history.back();
             } else if (i === 15) {

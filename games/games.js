@@ -3,12 +3,17 @@ const loadJsonFile = require('load-json-file');
 const childProcess = require('child_process');
 
 var params = new URLSearchParams(window.location.search);
-var games = loadJsonFile.sync(os.homedir() + '\\emuhub2\\games.json').games;
+var systemId = params.get('systemId');
+var games = loadGames();
 var focusedGameIndex = 0;
 
 addViewControls();
 addHeader();
 addGames();
+
+function loadGames() {
+    return loadJsonFile.sync(os.homedir() + '\\emuhub2\\games\\' + systemId + '\\games.json').games;
+}
 
 function addGames() {
     for (var i = 0; i < games.length; i++) {
@@ -18,27 +23,20 @@ function addGames() {
 
 function addGame(game) {
     var newParams = new URLSearchParams();
-    newParams.append('id', params.get('id'));
-    newParams.append('romFolderPath', params.get('romFolderPath'));
-    var commands = params.getAll('command');
-    var commandNames = params.getAll('commandName');
-    for (var i = 0; i < commands.length; i++) {
-         newParams.append('command', commands[i]);
-         newParams.append('commandName', commandNames[i]);
-    }
-    newParams.append('romName', game.romName);
+    newParams.append('systemId', systemId);
+    newParams.append('file', game.file);
     var link = document.createElement('a');
     link.id = game.name;
     link.href = '../commands/commands.html?' + newParams.toString();
     var image = document.createElement('img');
-    image.src = os.homedir() + '\\emuhub2\\images\\games\\' + game.romName + 'selection.png';
+    image.src = os.homedir() + '\\emuhub2\\images\\games\\' + game.file + 'selection.png';
     link.appendChild(image);
     document.body.appendChild(link);
 }
 
 function addHeader() {
     var image = document.createElement('img');
-    image.src = os.homedir() + '\\emuhub2\\images\\systems\\' + params.get('id') + 'header.png';
+    image.src = os.homedir() + '\\emuhub2\\images\\systems\\' + systemId + 'header.png';
     document.body.appendChild(image);
 }
 
