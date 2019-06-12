@@ -1,3 +1,4 @@
+const remote = require('electron').remote;
 const os = require('os');
 const loadJsonFile = require('load-json-file');
 const childProcess = require('child_process');
@@ -6,6 +7,7 @@ var params = new URLSearchParams(window.location.search);
 var systemId = params.get('systemId');
 var commands = loadCommands();
 var focusedCommandIndex = 0;
+var lastButtonIndex;
 
 addViewControls();
 addHeader();
@@ -48,10 +50,12 @@ function createOnclick(command) {
 }
 
 function runCommand(command) {
+    remote.getCurrentWindow().hide();
     childProcess.exec(command.replace(/HOME/g, os.homedir()), function(error, stdout, stderr) {
         if (error) {
             console.log(error);
         }
+        remote.getCurrentWindow().show();
     });
 }
 
@@ -70,7 +74,6 @@ function addViewControls() {
             }
         });
     window.addEventListener('gamepadconnected', function(event) {
-        var gamepad = event.gamepad;
         if (event.gamepad.index === 0) {
             setInterval(pollGamepad, 50);
         }
@@ -81,7 +84,8 @@ function pollGamepad() {
     var buttons = navigator.getGamepads()[0].buttons;
     for (var i = 0; i < buttons.length; i++) {
         var button = buttons[i];
-        if (button.pressed || button.value > 0) {
+        if (lastButtonIndex !== i && (button.pressed || button.value > 0)) {
+            lastButtonIndex = i;
             if (i === 0) {
                 document.getElementById(commands[focusedCommandIndex].name).click();
             } else if (i === 1) {

@@ -4,6 +4,7 @@ const loadJsonFile = require('load-json-file');
 
 var systems = loadSystems();
 var focusedSystemIndex = 0;
+var lastButtonIndex;
 
 addViewControls();
 addSystems();
@@ -39,7 +40,6 @@ function addViewControls() {
         }
     });
     window.addEventListener('gamepadconnected', function(event) {
-        var gamepad = event.gamepad;
         if (event.gamepad.index === 0) {
             setInterval(pollGamepad, 50);
         }
@@ -50,7 +50,8 @@ function pollGamepad() {
     var buttons = navigator.getGamepads()[0].buttons;
     for (var i = 0; i < buttons.length; i++) {
         var button = buttons[i];
-        if (button.pressed || button.value > 0) {
+        if (lastButtonIndex !== i && (button.pressed || button.value > 0)) {
+            lastButtonIndex = i;
             if (i === 0) {
                 document.getElementById(systems[focusedSystemIndex].id).click();
             } else if (i === 1) {

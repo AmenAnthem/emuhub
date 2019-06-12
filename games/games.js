@@ -6,6 +6,7 @@ var params = new URLSearchParams(window.location.search);
 var systemId = params.get('systemId');
 var games = loadGames();
 var focusedGameIndex = 0;
+var lastButtonIndex;
 
 addViewControls();
 addHeader();
@@ -49,7 +50,6 @@ function addViewControls() {
             }
         });
     window.addEventListener('gamepadconnected', function(event) {
-        var gamepad = event.gamepad;
         if (event.gamepad.index === 0) {
             setInterval(pollGamepad, 50);
         }
@@ -60,7 +60,8 @@ function pollGamepad() {
     var buttons = navigator.getGamepads()[0].buttons;
     for (var i = 0; i < buttons.length; i++) {
         var button = buttons[i];
-        if (button.pressed || button.value > 0) {
+        if (lastButtonIndex !== i && (button.pressed || button.value > 0)) {
+            lastButtonIndex = i;
             if (i === 0) {
                 document.getElementById(games[focusedGameIndex].name).click();
             } else if (i === 1) {
