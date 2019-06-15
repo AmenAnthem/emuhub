@@ -86,35 +86,27 @@ function addViewControls() {
 }
 
 function addGamepadPolling() {
-    pollingInterval = setInterval(pollGamepad, 50);
+    pollingInterval = setInterval(Gamepad.poll, 50);
 }
 
 function removeGamepadPolling() {
     clearInterval(pollingInterval);
 }
 
-function pollGamepad() {
-    var buttons = navigator.getGamepads()[0].buttons;
-    for (var i = 0; i < buttons.length; i++) {
-        var button = buttons[i];
-        if (lastButtonIndex === i) {
-            lastButtonCycles++;
-            if (lastButtonCycles >= lastButtonMaxCycles) {
-                lastButtonIndex = null;
-                lastButtonCycles = 0;
-            }
-        }
-        if (lastButtonIndex !== i && (button.pressed || button.value > 0)) {
-            lastButtonIndex = i;
-            if (i === 0) {
-                document.getElementById(commands[focusedCommandIndex].name).click();
-            } else if (i === 1) {
-                window.history.back();
-            } else if (i === 14 || i === 12) {
-                focusedCommandIndex--;
-            } else if (i === 15 || i === 13) {
-                focusedCommandIndex++;
-            }
-        }
+var GamepadControls = {
+    confirm : function() {
+        document.getElementById(commands[focusedCommandIndex].name).click();
+    },
+
+    cancel : function() {
+        window.history.back();
+    },
+
+    left : function() {
+        focusedCommandIndex--;
+    },
+
+    right : function() {
+        focusedCommandIndex++;
     }
 }
