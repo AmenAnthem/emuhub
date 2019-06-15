@@ -6,8 +6,9 @@ function createWindow() {
     mainWindow = new BrowserWindow({
         width: 1920,
         height: 1080,
+        fullscreen: true,
         frame: false,
-        icon: __dirname + '/icon.png',
+        icon: __dirname + '/resources/icon.png',
         webPreferences: {
             nodeIntegration: true
         }
@@ -16,7 +17,7 @@ function createWindow() {
     mainWindow.on('closed', function () {
         mainWindow = null
     });
-    //mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 }
 app.on('ready', createWindow);
 app.on('window-all-closed', function () {

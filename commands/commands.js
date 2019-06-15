@@ -2,17 +2,19 @@ const remote = require('electron').remote;
 const os = require('os');
 const loadJsonFile = require('load-json-file');
 const childProcess = require('child_process');
+const params = new URLSearchParams(window.location.search);
+const systemId = params.get('systemId');
+const file = params.get('file');
+const commands = loadCommands();
+const lastButtonMaxCycles = 5;
 
-var params = new URLSearchParams(window.location.search);
-var systemId = params.get('systemId');
-var file = params.get('file');
-var commands = loadCommands();
 var focusedCommandIndex = 0;
-var lastButtonIndex;
+var lastButtonIndex = null;
+var lastButtonCycles = 0;
+var pollingInterval = null;
 
 addViewControls();
-addHeader();
-addCommands();
+setIntialCommands();
 
 function loadCommands() {
     var systems = loadJsonFile.sync(os.homedir() + '\\emuhub2\\systems\\systems.json').systems;
@@ -25,13 +27,13 @@ function loadCommands() {
     return [];
 }
 
-function addCommands() {
+function setIntialCommands() {
     for (var i = 0; i < commands.length; i++) {
-        addCommand(commands[i]);
+        setCommand(commands[i], i);
     }
 }
 
-function addCommand(command) {
+function setCommand(command, index) {
     var link = document.createElement('a');
     link.id = command.name;
     link.href = '#';
@@ -39,7 +41,13 @@ function addCommand(command) {
     var image = document.createElement('img');
     image.src = os.homedir() + '\\emuhub2\\images\\commands\\' + command.name + 'selection.png';
     link.appendChild(image);
-    document.body.appendChild(link);
+    var commandDiv = document.getElementById('command' + index);
+    var childNodes = commandDiv.childNodes;
+    if (childNodes.length === 0) {
+        commandDiv.appendChild(link);
+    } else {
+        commandDiv.replaceChild(link, childNodes[0]);
+    }
 }
 
 function createOnclick(command) {
@@ -51,19 +59,15 @@ function createOnclick(command) {
 }
 
 function runCommand(command) {
+    removeGamepadPolling();
     remote.getCurrentWindow().hide();
     childProcess.exec(command.replace(/HOME/g, os.homedir()), function(error, stdout, stderr) {
         if (error) {
             console.log(error);
         }
         remote.getCurrentWindow().show();
+        addGamepadPolling();
     });
-}
-
-function addHeader() {
-    var image = document.createElement('img');
-    image.src = os.homedir() + '\\emuhub2\\images\\systems\\' + systemId + 'header.png';
-    document.body.appendChild(image);
 }
 
 function addViewControls() {
@@ -76,15 +80,30 @@ function addViewControls() {
         });
     window.addEventListener('gamepadconnected', function(event) {
         if (event.gamepad.index === 0) {
-            setInterval(pollGamepad, 50);
+            addGamepadPolling();
         }
     });
+}
+
+function addGamepadPolling() {
+    pollingInterval = setInterval(pollGamepad, 50);
+}
+
+function removeGamepadPolling() {
+    clearInterval(pollingInterval);
 }
 
 function pollGamepad() {
     var buttons = navigator.getGamepads()[0].buttons;
     for (var i = 0; i < buttons.length; i++) {
         var button = buttons[i];
+        if (lastButtonIndex === i) {
+            lastButtonCycles++;
+            if (lastButtonCycles >= lastButtonMaxCycles) {
+                lastButtonIndex = null;
+                lastButtonCycles = 0;
+            }
+        }
         if (lastButtonIndex !== i && (button.pressed || button.value > 0)) {
             lastButtonIndex = i;
             if (i === 0) {

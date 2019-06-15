@@ -1,12 +1,14 @@
 const os = require('os');
 const loadJsonFile = require('load-json-file');
 const childProcess = require('child_process');
+const params = new URLSearchParams(window.location.search);
+const systemId = params.get('systemId');
+const games = loadGames();
+const lastButtonMaxCycles = 5;
 
-var params = new URLSearchParams(window.location.search);
-var systemId = params.get('systemId');
-var games = loadGames();
 var focusedGameIndex = 0;
-var lastButtonIndex;
+var lastButtonIndex = null;
+var lastButtonCycles = 0;
 
 addViewControls();
 addHeader();
@@ -51,15 +53,26 @@ function addViewControls() {
         });
     window.addEventListener('gamepadconnected', function(event) {
         if (event.gamepad.index === 0) {
-            setInterval(pollGamepad, 50);
+            addGamepadPolling();
         }
     });
+}
+
+function addGamepadPolling() {
+    pollingInterval = setInterval(pollGamepad, 50);
 }
 
 function pollGamepad() {
     var buttons = navigator.getGamepads()[0].buttons;
     for (var i = 0; i < buttons.length; i++) {
         var button = buttons[i];
+        if (lastButtonIndex === i) {
+            lastButtonCycles++;
+            if (lastButtonCycles >= lastButtonMaxCycles) {
+                lastButtonIndex = null;
+                lastButtonCycles = 0;
+            }
+        }
         if (lastButtonIndex !== i && (button.pressed || button.value > 0)) {
             lastButtonIndex = i;
             if (i === 0) {
@@ -67,9 +80,9 @@ function pollGamepad() {
             } else if (i === 1) {
                 window.history.back();
             } else if (i === 14 || i === 12) {
-                focusedSystemIndex--;
+                focusedGameIndex--;
             } else if (i === 15 || i === 13) {
-                focusedSystemIndex++;
+                focusedGameIndex++;
             }
         }
     }

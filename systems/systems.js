@@ -1,25 +1,27 @@
 const remote = require('electron').remote;
 const os = require('os');
 const loadJsonFile = require('load-json-file');
+const systems = loadSystems();
+const lastButtonMaxCycles = 5;
 
-var systems = loadSystems();
 var focusedSystemIndex = 0;
-var lastButtonIndex;
+var lastButtonIndex = null;
+var lastButtonCycles = 0;
 
 addViewControls();
-addSystems();
+setInitialSystems();
 
 function loadSystems() {
     return loadJsonFile.sync(os.homedir() + '\\emuhub2\\systems\\systems.json').systems;
 }
 
-function addSystems() {
-    for (var i = 0; i < systems.length; i++) {
-        addSystem(systems[i]);
+function setInitialSystems() {
+    for (var i = 0; i < 3; i++) {
+        setSystem(systems[i], i);
     }
 }
 
-function addSystem(system) {
+function setSystem(system, index) {
     var newParams = new URLSearchParams();
     newParams.append('systemId', system.id);
     var link = document.createElement('a');
@@ -28,7 +30,13 @@ function addSystem(system) {
     var image = document.createElement('img');
     image.src = os.homedir() + '\\emuhub2\\images\\systems\\' + system.id + 'selection.png';
     link.appendChild(image);
-    document.body.appendChild(link);
+    var systemDiv = document.getElementById('system' + index);
+    var childNodes = systemDiv.childNodes;
+    if (childNodes.length === 0) {
+        systemDiv.appendChild(link);
+    } else {
+        systemDiv.replaceChild(link, childNodes[0]);
+    }
 }
 
 function addViewControls() {
@@ -41,15 +49,26 @@ function addViewControls() {
     });
     window.addEventListener('gamepadconnected', function(event) {
         if (event.gamepad.index === 0) {
-            setInterval(pollGamepad, 50);
+            addGamepadPolling();
         }
     });
+}
+
+function addGamepadPolling() {
+    pollingInterval = setInterval(pollGamepad, 50);
 }
 
 function pollGamepad() {
     var buttons = navigator.getGamepads()[0].buttons;
     for (var i = 0; i < buttons.length; i++) {
         var button = buttons[i];
+        if (lastButtonIndex === i) {
+            lastButtonCycles++;
+            if (lastButtonCycles >= lastButtonMaxCycles) {
+                lastButtonIndex = null;
+                lastButtonCycles = 0;
+            }
+        }
         if (lastButtonIndex !== i && (button.pressed || button.value > 0)) {
             lastButtonIndex = i;
             if (i === 0) {
