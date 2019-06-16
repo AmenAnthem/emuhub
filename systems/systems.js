@@ -58,7 +58,7 @@ function addGamepadPolling() {
     pollingInterval = setInterval(Gamepad.poll, 50);
 }
 
-var GamepadControls = {
+var Controls = {
     confirm : function() {
         document.getElementById(systems[focusedSystemIndex].id).click();
     },

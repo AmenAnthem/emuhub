@@ -16,13 +16,13 @@ var Gamepad = {
             if (lastButtonIndex !== i && (button.pressed || button.value > 0)) {
                 lastButtonIndex = i;
                 if (i === 0) {
-                    GamepadControls.confirm();
+                    Controls.confirm();
                 } else if (i === 1) {
-                    GamepadControls.cancel();
+                    Controls.cancel();
                 } else if (i === 14 || i === 12) {
-                    GamepadControls.left();
+                    Controls.left();
                 } else if (i === 15 || i === 13) {
-                    GamepadControls.right();
+                    Controls.right();
                 }
             }
         }
