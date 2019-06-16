@@ -13,7 +13,7 @@ addViewControls();
 updateVisibleSystems();
 
 function loadSystems() {
-    return loadJsonFile.sync(os.homedir() + '\\emuhub2\\systems\\systems.json').systems;
+    return loadJsonFile.sync(os.homedir() + '\\emuhub\\systems\\systems.json').systems;
 }
 
 function updateVisibleSystems() {
@@ -29,7 +29,7 @@ function setSystem(system, index) {
     link.id = 'systemlink' + index;
     link.href = '../games/games.html?' + newParams.toString();
     var image = document.createElement('img');
-    image.src = os.homedir() + '\\emuhub2\\images\\systems\\' + system.id + '.png';
+    image.src = os.homedir() + '\\emuhub\\images\\systems\\' + system.id + '.png';
     link.appendChild(image);
     setFirstChildNode(document.getElementById('system' + index), link);
     if (index === 1) {

@@ -18,7 +18,7 @@ addViewControls();
 updateVisibleCommands();
 
 function loadCommands() {
-    var systems = loadJsonFile.sync(os.homedir() + '\\emuhub2\\systems\\systems.json').systems;
+    var systems = loadJsonFile.sync(os.homedir() + '\\emuhub\\systems\\systems.json').systems;
     for (var i = 0; i < systems.length; i++) {
         var system = systems[i];
         if (system.id === systemId) {
@@ -40,7 +40,7 @@ function setCommand(command, index) {
     link.href = '#';
     link.onclick = createOnclick(command.command);
     var image = document.createElement('img');
-    image.src = os.homedir() + '\\emuhub2\\images\\commands\\' + command.name + '.png';
+    image.src = os.homedir() + '\\emuhub\\images\\commands\\' + command.name + '.png';
     link.appendChild(image);
     var commandDiv = document.getElementById('command' + index);
     var childNodes = commandDiv.childNodes;
@@ -67,7 +67,7 @@ function setFirstChildNode(element, childNode) {
 function createOnclick(command) {
     return (function(currentCommand) {
         return function() {
-            runCommand(currentCommand + ' \"' + os.homedir() + '\\emuhub2\\games\\' + systemId + '\\' + file + '\"');
+            runCommand(currentCommand + ' \"' + os.homedir() + '\\emuhub\\games\\' + systemId + '\\' + file + '\"');
         }
     })(command);
 }
