@@ -15,16 +15,24 @@ var Gamepad = {
             var button = buttons[i];
             if (lastButtonIndex !== i && (button.pressed || button.value > 0)) {
                 lastButtonIndex = i;
-                if (i === 0) {
-                    Controls.confirm();
-                } else if (i === 1) {
-                    Controls.cancel();
-                } else if (i === 14 || i === 12) {
-                    Controls.left();
-                } else if (i === 15 || i === 13) {
-                    Controls.right();
-                }
+                Gamepad.executeControls(i);
             }
+        }
+    },
+
+    executeControls : function(buttonIndex) {
+        if (buttonIndex === 0) {
+            Controls.confirm();
+        } else if (buttonIndex === 1) {
+            Controls.cancel();
+        } else if (buttonIndex === 14) {
+            Controls.left();
+        } else if (buttonIndex === 15) {
+            Controls.right();
+        } else if (buttonIndex === 12) {
+            Controls.up();
+        } else if (buttonIndex === 13) {
+            Controls.down();
         }
     }
 }

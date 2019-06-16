@@ -6,6 +6,7 @@ const params = new URLSearchParams(window.location.search);
 const systemId = params.get('systemId');
 const file = params.get('file');
 const commands = loadCommands();
+const maxVisibleCommands = 3;
 const lastButtonMaxCycles = 5;
 
 var focusedCommandIndex = 0;
@@ -103,10 +104,18 @@ var Controls = {
     },
 
     left : function() {
-        focusedCommandIndex--;
+        focusedCommandIndex === 0 ? focusedCommandIndex = commands.length - 1 : focusedCommandIndex--;
     },
 
     right : function() {
-        focusedCommandIndex++;
+        focusedCommandIndex === commands.length - 1 ? focusedCommandIndex = 0 : focusedCommandIndex++;
+    },
+
+    up : function() {
+        focusedCommandIndex === 0 ? focusedCommandIndex = commands.length - 1 : focusedCommandIndex -= maxVisibleCommands;
+    },
+
+    down : function() {
+        focusedCommandIndex === commands.length - 1 ? focusedCommandIndex = 0 : focusedCommandIndex += maxVisibleCommands;
     }
 }

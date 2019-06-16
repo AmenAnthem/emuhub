@@ -2,6 +2,7 @@ const remote = require('electron').remote;
 const os = require('os');
 const loadJsonFile = require('load-json-file');
 const systems = loadSystems();
+const maxVisibleSystems = 3;
 const lastButtonMaxCycles = 5;
 
 var focusedSystemIndex = 0;
@@ -16,7 +17,7 @@ function loadSystems() {
 }
 
 function setInitialSystems() {
-    for (var i = 0; i < 3; i++) {
+    for (var i = 0; i < maxVisibleSystems; i++) {
         setSystem(systems[i], i);
     }
 }
@@ -68,10 +69,18 @@ var Controls = {
     },
 
     left : function() {
-        focusedSystemIndex--;
+        focusedSystemIndex === 0 ? focusedSystemIndex = systems.length - 1 : focusedSystemIndex--;
     },
 
     right : function() {
-        focusedSystemIndex++;
+        focusedSystemIndex === systems.length - 1 ? focusedSystemIndex = 0 : focusedSystemIndex++;
+    },
+
+    up : function() {
+        focusedSystemIndex === 0 ? focusedSystemIndex = systems.length - 1 : focusedSystemIndex -= maxVisibleSystems;
+    },
+
+    down : function() {
+        focusedSystemIndex === systems.length - 1 ? focusedSystemIndex = 0 : focusedSystemIndex += maxVisibleSystems;
     }
 }

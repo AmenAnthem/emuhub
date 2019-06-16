@@ -4,6 +4,7 @@ const childProcess = require('child_process');
 const params = new URLSearchParams(window.location.search);
 const systemId = params.get('systemId');
 const games = loadGames();
+const maxVisibleGames = 5;
 const lastButtonMaxCycles = 5;
 
 var focusedGameIndex = 0;
@@ -18,7 +19,7 @@ function loadGames() {
 }
 
 function setIntialGames() {
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < maxVisibleGames; i++) {
         setGame(games[i], i);
     }
 }
@@ -71,10 +72,18 @@ var Controls = {
     },
 
     left : function() {
-        focusedGameIndex--;
+        focusedGameIndex === 0 ? focusedGameIndex = games.length - 1 : focusedGameIndex--;
     },
 
     right : function() {
-        focusedGameIndex++;
+        focusedGameIndex === games.length - 1 ? focusedGameIndex = 0 : focusedGameIndex++;
+    },
+
+    up : function() {
+        focusedGameIndex === 0 ? focusedGameIndex = games.length - 1 : focusedGameIndex -= maxVisibleGames;
+    },
+
+    down : function() {
+        focusedGameIndex === games.length - 1 ? focusedGameIndex = 0 : focusedGameIndex += maxVisibleGames;
     }
 }
