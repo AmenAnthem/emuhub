@@ -117,10 +117,12 @@ function removeGamepadPolling() {
 
 var Controls = {
     confirm : function() {
+        Gamepad.clearLastButton();
         document.getElementById('commandlink1').click();
     },
 
     cancel : function() {
+        Gamepad.clearLastButton();
         window.history.back();
     },
 

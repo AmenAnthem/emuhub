@@ -94,10 +94,12 @@ function addGamepadPolling() {
 
 var Controls = {
     confirm : function() {
+        Gamepad.clearLastButton();
         document.getElementById('gamelink2').click();
     },
 
     cancel : function() {
+        Gamepad.clearLastButton();
         window.history.back();
     },
 
