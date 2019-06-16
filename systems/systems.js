@@ -10,23 +10,23 @@ var lastButtonIndex = null;
 var lastButtonCycles = 0;
 
 addViewControls();
-setInitialSystems();
+updateVisibleSystems();
 
 function loadSystems() {
     return loadJsonFile.sync(os.homedir() + '\\emuhub2\\systems\\systems.json').systems;
 }
 
-function setInitialSystems() {
-    for (var i = 0; i < maxVisibleSystems; i++) {
-        setSystem(systems[i], i);
-    }
+function updateVisibleSystems() {
+    setSystem(systems[previousSystemIndex()], 0);
+    setSystem(systems[focusedSystemIndex], 1);
+    setSystem(systems[nextSystemIndex()], 2);
 }
 
 function setSystem(system, index) {
     var newParams = new URLSearchParams();
     newParams.append('systemId', system.id);
     var link = document.createElement('a');
-    link.id = system.id;
+    link.id = 'systemlink' + index;
     link.href = '../games/games.html?' + newParams.toString();
     var image = document.createElement('img');
     image.src = os.homedir() + '\\emuhub2\\images\\systems\\' + system.id + 'selection.png';
@@ -38,6 +38,14 @@ function setSystem(system, index) {
     } else {
         systemDiv.replaceChild(link, childNodes[0]);
     }
+}
+
+function previousSystemIndex() {
+    return focusedSystemIndex === 0 ? systems.length - 1 : focusedSystemIndex - 1;
+}
+
+function nextSystemIndex() {
+    return focusedSystemIndex === systems.length - 1 ? 0 : focusedSystemIndex + 1;
 }
 
 function addViewControls() {
@@ -61,7 +69,7 @@ function addGamepadPolling() {
 
 var Controls = {
     confirm : function() {
-        document.getElementById(systems[focusedSystemIndex].id).click();
+        document.getElementById('systemlink1').click();
     },
 
     cancel : function() {
@@ -69,18 +77,26 @@ var Controls = {
     },
 
     left : function() {
-        focusedSystemIndex === 0 ? focusedSystemIndex = systems.length - 1 : focusedSystemIndex--;
+        focusedSystemIndex = previousSystemIndex();
+        updateVisibleSystems();
     },
 
     right : function() {
-        focusedSystemIndex === systems.length - 1 ? focusedSystemIndex = 0 : focusedSystemIndex++;
+        focusedSystemIndex = nextSystemIndex();
+        updateVisibleSystems();
     },
 
     up : function() {
-        focusedSystemIndex === 0 ? focusedSystemIndex = systems.length - 1 : focusedSystemIndex -= maxVisibleSystems;
+        for (var i = 0; i < maxVisibleSystems; i++) {
+            focusedSystemIndex = previousSystemIndex();
+        }
+        updateVisibleSystems();
     },
 
     down : function() {
-        focusedSystemIndex === systems.length - 1 ? focusedSystemIndex = 0 : focusedSystemIndex += maxVisibleSystems;
+        for (var i = 0; i < maxVisibleSystems; i++) {
+            focusedSystemIndex = nextSystemIndex();
+        }
+        updateVisibleSystems();
     }
 }
