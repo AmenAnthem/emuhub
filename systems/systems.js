@@ -75,10 +75,12 @@ function addGamepadPolling() {
 
 var Controls = {
     confirm : function() {
+        Gamepad.clearLastButton();
         document.getElementById('systemlink1').click();
     },
 
     cancel : function() {
+        Gamepad.clearLastButton();
         remote.getCurrentWindow().close();
     },
 

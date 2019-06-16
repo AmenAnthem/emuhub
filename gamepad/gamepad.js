@@ -8,8 +8,7 @@ var Gamepad = {
             if (lastButtonIndex === i) {
                 lastButtonCycles++;
                 if (lastButtonCycles >= lastButtonMaxCycles) {
-                    lastButtonIndex = null;
-                    lastButtonCycles = 0;
+                    Gamepad.clearLastButton();
                 }
             }
             var button = buttons[i];
@@ -34,5 +33,10 @@ var Gamepad = {
         } else if (buttonIndex === 13) {
             Controls.down();
         }
+    },
+
+    clearLastButton : function() {
+        lastButtonIndex = null;
+        lastButtonCycles = 0;
     }
 }
