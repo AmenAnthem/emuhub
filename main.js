@@ -11,6 +11,7 @@ function createWindow() {
         resizeable : false,
         movable : false,
         darkTheme : true,
+        backgroundColor: '#303030',
         title : 'Emuhub',
         icon : __dirname + '/resources/icon.png',
         webPreferences : {
