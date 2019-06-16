@@ -28,7 +28,7 @@ function loadCommands() {
 }
 
 function setIntialCommands() {
-    for (var i = 0; i < commands.length; i++) {
+    for (var i = 0; i < 3; i++) {
         setCommand(commands[i], i);
     }
 }
@@ -93,7 +93,7 @@ function removeGamepadPolling() {
     clearInterval(pollingInterval);
 }
 
-var GamepadControls = {
+var Controls = {
     confirm : function() {
         document.getElementById(commands[focusedCommandIndex].name).click();
     },
