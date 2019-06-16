@@ -36,7 +36,7 @@ function updateVisibleCommands() {
 
 function setCommand(command, index) {
     var link = document.createElement('a');
-    link.id = command.name;
+    link.id = 'commandlink' + index;
     link.href = '#';
     link.onclick = createOnclick(command.command);
     var image = document.createElement('img');
@@ -48,6 +48,19 @@ function setCommand(command, index) {
         commandDiv.appendChild(link);
     } else {
         commandDiv.replaceChild(link, childNodes[0]);
+    }
+    setFirstChildNode(document.getElementById('command' + index), link);
+    if (index === 1) {
+        setFirstChildNode(document.getElementById('commandsFooter'), document.createTextNode(command.name));
+    }
+}
+
+function setFirstChildNode(element, childNode) {
+    var childNodes = element.childNodes;
+    if (childNodes.length === 0) {
+        element.appendChild(childNode);
+    } else {
+        element.replaceChild(childNode, childNodes[0]);
     }
 }
 
@@ -104,7 +117,7 @@ function removeGamepadPolling() {
 
 var Controls = {
     confirm : function() {
-        document.getElementById(commands[focusedCommandIndex].name).click();
+        document.getElementById('commandlink1').click();
     },
 
     cancel : function() {

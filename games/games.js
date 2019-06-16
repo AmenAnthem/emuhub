@@ -36,12 +36,18 @@ function setGame(game, index) {
     var image = document.createElement('img');
     image.src = os.homedir() + '\\emuhub2\\images\\games\\' + game.file + 'selection.png';
     link.appendChild(image);
-    var gameDiv = document.getElementById('game' + index);
-    var childNodes = gameDiv.childNodes;
+    setFirstChildNode(document.getElementById('game' + index), link);
+    if (index === 2) {
+        setFirstChildNode(document.getElementById('gamesFooter'), document.createTextNode(game.name));
+    }
+}
+
+function setFirstChildNode(element, childNode) {
+    var childNodes = element.childNodes;
     if (childNodes.length === 0) {
-        gameDiv.appendChild(link);
+        element.appendChild(childNode);
     } else {
-        gameDiv.replaceChild(link, childNodes[0]);
+        element.replaceChild(childNode, childNodes[0]);
     }
 }
 

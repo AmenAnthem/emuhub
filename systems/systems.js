@@ -31,12 +31,18 @@ function setSystem(system, index) {
     var image = document.createElement('img');
     image.src = os.homedir() + '\\emuhub2\\images\\systems\\' + system.id + 'selection.png';
     link.appendChild(image);
-    var systemDiv = document.getElementById('system' + index);
-    var childNodes = systemDiv.childNodes;
+    setFirstChildNode(document.getElementById('system' + index), link);
+    if (index === 1) {
+        setFirstChildNode(document.getElementById('systemsFooter'), document.createTextNode(system.name));
+    }
+}
+
+function setFirstChildNode(element, childNode) {
+    var childNodes = element.childNodes;
     if (childNodes.length === 0) {
-        systemDiv.appendChild(link);
+        element.appendChild(childNode);
     } else {
-        systemDiv.replaceChild(link, childNodes[0]);
+        element.replaceChild(childNode, childNodes[0]);
     }
 }
 
