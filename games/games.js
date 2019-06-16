@@ -34,7 +34,7 @@ function setGame(game, index) {
     link.id = 'gamelink' + index;
     link.href = '../commands/commands.html?' + newParams.toString();
     var image = document.createElement('img');
-    image.src = os.homedir() + '\\emuhub2\\images\\games\\' + game.file + 'selection.png';
+    image.src = os.homedir() + '\\emuhub2\\images\\games\\' + game.file + '.png';
     link.appendChild(image);
     setFirstChildNode(document.getElementById('game' + index), link);
     if (index === 2) {

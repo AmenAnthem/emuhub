@@ -40,7 +40,7 @@ function setCommand(command, index) {
     link.href = '#';
     link.onclick = createOnclick(command.command);
     var image = document.createElement('img');
-    image.src = os.homedir() + '\\emuhub2\\images\\commands\\' + command.name + 'selection.png';
+    image.src = os.homedir() + '\\emuhub2\\images\\commands\\' + command.name + '.png';
     link.appendChild(image);
     var commandDiv = document.getElementById('command' + index);
     var childNodes = commandDiv.childNodes;
