@@ -15,7 +15,7 @@ var lastButtonCycles = 0;
 var pollingInterval = null;
 
 addViewControls();
-setIntialCommands();
+updateVisibleCommands();
 
 function loadCommands() {
     var systems = loadJsonFile.sync(os.homedir() + '\\emuhub2\\systems\\systems.json').systems;
@@ -28,10 +28,10 @@ function loadCommands() {
     return [];
 }
 
-function setIntialCommands() {
-    for (var i = 0; i < 3; i++) {
-        setCommand(commands[i], i);
-    }
+function updateVisibleCommands() {
+    setCommand(commands[previousCommandIndex()], 0);
+    setCommand(commands[focusedCommandIndex], 1);
+    setCommand(commands[nextCommandIndex()], 2);
 }
 
 function setCommand(command, index) {
@@ -71,6 +71,14 @@ function runCommand(command) {
     });
 }
 
+function previousCommandIndex() {
+    return focusedCommandIndex === 0 ? commands.length - 1 : focusedCommandIndex - 1;
+}
+
+function nextCommandIndex() {
+    return focusedCommandIndex === commands.length - 1 ? 0 : focusedCommandIndex + 1;
+}
+
 function addViewControls() {
     document.addEventListener('keydown', event => {
             switch (event.key) {
@@ -104,18 +112,26 @@ var Controls = {
     },
 
     left : function() {
-        focusedCommandIndex === 0 ? focusedCommandIndex = commands.length - 1 : focusedCommandIndex--;
+        focusedCommandIndex = previousCommandIndex();
+        updateVisibleCommands();
     },
 
     right : function() {
-        focusedCommandIndex === commands.length - 1 ? focusedCommandIndex = 0 : focusedCommandIndex++;
+        focusedCommandIndex = nextCommandIndex();
+        updateVisibleCommands();
     },
 
     up : function() {
-        focusedCommandIndex === 0 ? focusedCommandIndex = commands.length - 1 : focusedCommandIndex -= maxVisibleCommands;
+        for (var i = 0; i < maxVisibleCommands; i++) {
+            focusedCommandIndex = previousCommandIndex();
+        }
+        updateVisibleCommands();
     },
 
     down : function() {
-        focusedCommandIndex === commands.length - 1 ? focusedCommandIndex = 0 : focusedCommandIndex += maxVisibleCommands;
+        for (var i = 0; i < maxVisibleCommands; i++) {
+            focusedCommandIndex = nextCommandIndex();
+        }
+        updateVisibleCommands();
     }
 }
