@@ -12,16 +12,18 @@ var lastButtonIndex = null;
 var lastButtonCycles = 0;
 
 addViewControls();
-setIntialGames();
+updateVisibleGames();
 
 function loadGames() {
     return loadJsonFile.sync(os.homedir() + '\\emuhub2\\games\\' + systemId + '\\games.json').games;
 }
 
-function setIntialGames() {
-    for (var i = 0; i < maxVisibleGames; i++) {
-        setGame(games[i], i);
-    }
+function updateVisibleGames() {
+    setGame(games[farPreviousGameIndex()], 0);
+    setGame(games[previousGameIndex()], 1);
+    setGame(games[focusedGameIndex], 2);
+    setGame(games[nextGameIndex()], 3);
+    setGame(games[farNextGameIndex()], 4);
 }
 
 function setGame(game, index) {
@@ -29,7 +31,7 @@ function setGame(game, index) {
     newParams.append('systemId', systemId);
     newParams.append('file', game.file);
     var link = document.createElement('a');
-    link.id = game.name;
+    link.id = 'gamelink' + index;
     link.href = '../commands/commands.html?' + newParams.toString();
     var image = document.createElement('img');
     image.src = os.homedir() + '\\emuhub2\\images\\games\\' + game.file + 'selection.png';
@@ -41,6 +43,28 @@ function setGame(game, index) {
     } else {
         gameDiv.replaceChild(link, childNodes[0]);
     }
+}
+
+function previousGameIndex() {
+    return focusedGameIndex === 0 ? games.length - 1 : focusedGameIndex - 1;
+}
+
+function farPreviousGameIndex() {
+    if (focusedGameIndex === 1) {
+        return games.length - 1;
+    }
+    return focusedGameIndex === 0 ? games.length - 2 : focusedGameIndex - 2;
+}
+
+function nextGameIndex() {
+    return focusedGameIndex === games.length - 1 ? 0 : focusedGameIndex + 1;
+}
+
+function farNextGameIndex() {
+    if (focusedGameIndex === games.length - 1) {
+        return 1;
+    }
+    return focusedGameIndex === games.length - 2 ? 0 : focusedGameIndex + 2;
 }
 
 function addViewControls() {
@@ -64,7 +88,7 @@ function addGamepadPolling() {
 
 var Controls = {
     confirm : function() {
-        document.getElementById(games[focusedGameIndex].name).click();
+        document.getElementById('gamelink2').click();
     },
 
     cancel : function() {
@@ -72,18 +96,26 @@ var Controls = {
     },
 
     left : function() {
-        focusedGameIndex === 0 ? focusedGameIndex = games.length - 1 : focusedGameIndex--;
+        focusedGameIndex = previousGameIndex();
+        updateVisibleGames();
     },
 
     right : function() {
-        focusedGameIndex === games.length - 1 ? focusedGameIndex = 0 : focusedGameIndex++;
+        focusedGameIndex = nextGameIndex();
+        updateVisibleGames();
     },
 
     up : function() {
-        focusedGameIndex === 0 ? focusedGameIndex = games.length - 1 : focusedGameIndex -= maxVisibleGames;
+        for (var i = 0; i < maxVisibleGames; i++) {
+            focusedGameIndex = previousGameIndex();
+        }
+        updateVisibleGames();
     },
 
     down : function() {
-        focusedGameIndex === games.length - 1 ? focusedGameIndex = 0 : focusedGameIndex += maxVisibleGames;
+        for (var i = 0; i < maxVisibleGames; i++) {
+            focusedGameIndex = nextGameIndex();
+        }
+        updateVisibleGames();
     }
 }
