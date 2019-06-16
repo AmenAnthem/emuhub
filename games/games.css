@@ -1,3 +1,76 @@
+* {
+	box-sizing: border-box;
+}
+
 body {
-  background-color: grey;
+    background-color: #303030;
+    background-image: url("background.png");
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.gamesHeader {
+    position: absolute;
+    height: 290px;
+    top: 0px;
+    left: 0px;
+}
+
+.farPreviousGame {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 5%;
+}
+
+.previousGame {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 20%;
+}
+
+.currentGame {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.nextGame {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 20%;
+}
+
+.farNextGame {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 5%;
+}
+
+.gamesFooter {
+    position: absolute;
+    height: 290px;
+    bottom: 0px;
 }

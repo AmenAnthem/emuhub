@@ -11,20 +11,19 @@ var lastButtonIndex = null;
 var lastButtonCycles = 0;
 
 addViewControls();
-addHeader();
-addGames();
+setIntialGames();
 
 function loadGames() {
     return loadJsonFile.sync(os.homedir() + '\\emuhub2\\games\\' + systemId + '\\games.json').games;
 }
 
-function addGames() {
-    for (var i = 0; i < games.length; i++) {
-        addGame(games[i]);
+function setIntialGames() {
+    for (var i = 0; i < 5; i++) {
+        setGame(games[i], i);
     }
 }
 
-function addGame(game) {
+function setGame(game, index) {
     var newParams = new URLSearchParams();
     newParams.append('systemId', systemId);
     newParams.append('file', game.file);
@@ -34,13 +33,13 @@ function addGame(game) {
     var image = document.createElement('img');
     image.src = os.homedir() + '\\emuhub2\\images\\games\\' + game.file + 'selection.png';
     link.appendChild(image);
-    document.body.appendChild(link);
-}
-
-function addHeader() {
-    var image = document.createElement('img');
-    image.src = os.homedir() + '\\emuhub2\\images\\systems\\' + systemId + 'header.png';
-    document.body.appendChild(image);
+    var gameDiv = document.getElementById('game' + index);
+    var childNodes = gameDiv.childNodes;
+    if (childNodes.length === 0) {
+        gameDiv.appendChild(link);
+    } else {
+        gameDiv.replaceChild(link, childNodes[0]);
+    }
 }
 
 function addViewControls() {
@@ -62,7 +61,7 @@ function addGamepadPolling() {
     pollingInterval = setInterval(Gamepad.poll, 50);
 }
 
-var GamepadControls = {
+var Controls = {
     confirm : function() {
         document.getElementById(games[focusedGameIndex].name).click();
     },
