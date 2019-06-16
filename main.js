@@ -4,12 +4,16 @@ var mainWindow;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
-        width: 1920,
-        height: 1080,
-        fullscreen: true,
-        frame: false,
-        icon: __dirname + '/resources/icon.png',
-        webPreferences: {
+        width : 1920,
+        height : 1080,
+        fullscreen : true,
+        frame : false,
+        resizeable : false,
+        movable : false,
+        darkTheme : true,
+        title : 'Emuhub',
+        icon : __dirname + '/resources/icon.png',
+        webPreferences : {
             nodeIntegration: true
         }
     });
