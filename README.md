@@ -21,7 +21,7 @@ The contents:
 - systems - commands - name: is the humanly readable name of the command. It should contain the emulator name. This is displayed in Emuhub.
 - systems - commands - command: is the command line command with its arguments.
 
-### Configuring games:
+### Configuring games
 games.json contains your listed games.
 This file needs to be in the correspondig system subfolder in a subfolder called games.
 
@@ -30,7 +30,7 @@ The release archive contains a games.json with some example games configured.
 The contents:
 - games: is an array which contains the information of your games.
 - games - name: is the humanly readable name of the game. This is being displayed in Emuhub.
-- games - gameName: is the name of your game file (as contained in you correspondiing games folder).
+- games - file: is the name of your game file (as contained in you correspondiing games folder).
 
 ### Adding images
 When you first run Emuhub images are being created in the folder 'images'.
