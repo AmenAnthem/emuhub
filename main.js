@@ -18,7 +18,7 @@ function createWindow() {
             nodeIntegration: true
         }
     });
-    mainWindow.loadFile('systems/systems.html');
+    mainWindow.loadFile('splash/splash.html');
     mainWindow.on('closed', function () {
         mainWindow = null
     });
